@@ -13,7 +13,7 @@ This Python code in [Fretboard.py](Fretboard.py) can print out chords and scales
 
 The purpose of the program was to learn more about chord and scale theory, and provide the user with visual material with which to learn where the notes are located on the fretboard, and to practice reaching those notes while playing chords or scales.
 
-## Code outline
+##Code outline for script [run_analysis.R](run_analysis.R)
 
 The program asks you to chose between a guitar or a bass, and has different options for each selection. If you chose a guitar, you can chose between a 6 string or 7 string guitar. If you chose bass, you can select a 4 string, 5 string, or 6 string bass. For each of those you will have multiple tuning options.
 
@@ -31,9 +31,11 @@ Then the program will print out the fretboard again, with the positions of all t
 
 Finally, the program will ask you to pick a scale from a long list. After you type in the name, it will show you the scale formula and the intervals for example:
 
+```
 Scale: Byzantine
 Formula: R, H, 1.5, H, W, H, 1.5, H
 Intervals: 1, b2, 3, 4, 5, b6, 7
+```
 
 ## Installation
 
@@ -65,9 +67,6 @@ Change this to:
 
 Simply find all instances with "= raw_input() and adjust the comments as described above.
 
-```
-##Code outline for script [run_analysis.R](run_analysis.R)
-
 
 ## Credits
 
@@ -88,8 +87,8 @@ I would also like add a tab print out feature, but also explore other visulisati
 
 For those new to music theory, here are some introductions to how scales and modes work, and the respective intervals between notes.
 
-[https://en.wikipedia.org/wiki/List_of_musical_scales_and_modes] (https://en.wikipedia.org/wiki/List_of_musical_scales_and_modes)
-[https://en.wikibooks.org/wiki/Music_Theory/Scales_and_Intervals] (https://en.wikibooks.org/wiki/Music_Theory/Scales_and_Intervals)
+[https://en.wikipedia.org/wiki/List_of_musical_scales_and_modes](https://en.wikipedia.org/wiki/List_of_musical_scales_and_modes)
+[https://en.wikibooks.org/wiki/Music_Theory/Scales_and_Intervals](https://en.wikibooks.org/wiki/Music_Theory/Scales_and_Intervals)
 [https://en.wikipedia.org/?title=Scale_(music)](https://en.wikipedia.org/?title=Scale_(music))
 
 ## License
