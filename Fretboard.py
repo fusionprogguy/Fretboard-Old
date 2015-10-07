@@ -1,14 +1,47 @@
 notes_sharp = ['A', 'A#' , 'B', 'C' , 'C#', 'D', 'D#' , 'E' , 'F' , 'F#', 'G' , 'G#' ]
 notes_flat  = ['A', 'Bb' , 'B', 'C' , 'Db', 'D' ,'Eb' , 'E' , 'F' , 'Gb', 'G' , 'Ab' ]
-steps = ['1', 'b2' , '2' , 'b3' , '3' , '4' , 'b5' , '5' , 'b6', '6' , 'b7', '7' , '8', 
-'b9', '9', 'b10', '10','11', 'b12','12','b13','13','b14','14','b15','15']
-notes_dots  = ['', '' , 'o', '' , 'o', '' ,'o' , '' , '' , 'oo']
+steps = ['1', 'b2' , '2' , 'b3' , '3' , '4' , 'b5' , '5' , 'b6', '6' , 'b7', '7' , '1', 'b9', '9', 'b10', '10','11', 'b12','12','b13','13','b14','14','b15','15']
+
+notes_dots = ['     ', '       ', '     ' , '  O  ', '     ' , '  O  ', '     ' ,'  O  ' , '     ' ,'  O  ', '     ' , '     ' , ' OO  ']
 notes = notes_flat
 
+import time
+import re
 import random 
 from random import randint
 
-import re
+# Open the file for reading fretboard settings
+with open('settings.txt', 'r') as infile:
+    data = infile.read()  # Read the contents of the file into memory.
+
+# Return a list of the lines, breaking at line boundaries.
+settings = data.splitlines()
+print "Settings:", settings
+
+# Print each line of the file
+#for line in settings:
+#    print line
+
+instrument = str(settings[0])    # eg. Guitar or Bass
+string_no = str(settings[1])     # Number of strings the guitar or bass has eg. 4, 5, 6, 7
+tuning = str(settings[2])        # eg. Standard or Drop D
+root_note = str(settings[3])     # eg. A, G, F# etc
+chord_name = str(settings[4])    # eg 7#9#5
+string_scale = str(settings[5])  # eg Major, Mixolydian
+
+
+#Make all print statemens also go to a file
+import sys
+class Logger(object):
+    def __init__(self, filename="Default.log"):
+        self.terminal = sys.stdout
+        self.log = open(filename, "a")
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+
+sys.stdout = Logger("fretboard_log.txt")
 
 chord_dict = {
 'major':['maj','1','3','5'],
@@ -51,7 +84,7 @@ chord_dict = {
 '13th flat nine':['13b9','1','3','5','b7','b9','13'],
 '13th sharp nine':['13#9','1','3','5','b7','#9','13'],
 'test':['test','1','b3','bb5','b7','#9','##13'],
-'all':['all', '1', 'b2' , '2' , 'b3' , '3' , '4' , 'b5' , '5' , 'b6', '6' , 'b7', '7' , '8']
+'all':['all', '1', 'b2' , '2' , 'b3' , '3' , '4' , 'b5' , '5' , 'b6', '6' , 'b7', '7']
 }
 
 tuning_dict = {
@@ -148,17 +181,17 @@ tuning_dict = {
 ListScales = []
 ListScales.append({"Scale":'Ahava Raba', "H_Steps":'R, H, 1.5, H, W, H, W, W', "L_Steps": ['1', 'b2', '3', '4', '5', 'b6', 'b7']}),
 ListScales.append({"Scale":'Algerian',  "H_Steps":'R, W, H, W, H, H, H, 1.5, H', "L_Steps": ['1', '2', 'b3', '4', 'b5', 'bb6', 'bbb7']})
-ListScales.append({"Scale":'Altered',  "H_Steps": 'R, H, W, H, W, W, W, W', "L_Steps": ['1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7']})
+ListScales.append({"Scale":'Altered',  "H_Steps": 'R, H, W, H, W, W, W, W', "L_Steps": ['1', 'b2', 'b3', '3', 'b5', 'b6', 'b7']})
 ListScales.append({"Scale":'Arabian (a)',  "H_Steps": 'R, W, H, W, H, W, H, W, H', "L_Steps": ['1', '2', 'b3', '4', 'b5', 'b6', 'bb7']})
 ListScales.append({"Scale":'Arabian (b)',  "H_Steps": 'R, W, W, H, H, W, W, W', "L_Steps": ['1', '2', '3', '4', 'b5', 'b6', 'b7']})
 ListScales.append({"Scale":'Augmented',  "H_Steps": 'R, 1.5, H, W, W, 1.5, H', "L_Steps": ['1', '#2', '3', '#4', '#5', '##6']})
 ListScales.append({"Scale":'Auxiliary Diminished',  "H_Steps": 'R, W, H, W, H, W, H, W, H', "L_Steps": ['1', '2', 'b3', '4', 'b5', 'b6', 'bb7']})
-ListScales.append({"Scale":'Auxiliary Diminished Blues',  "H_Steps": 'R, H, W, H, W, H, W, H, W', "L_Steps": ['1', 'b2', 'b3', 'b4', 'b5', 'bb6', 'bb7']})
+ListScales.append({"Scale":'Auxiliary Diminished Blues',  "H_Steps": 'R, H, W, H, W, H, W, H, W', "L_Steps": ['1', 'b2', 'b3', '3', 'b5', 'bb6', 'bb7']})
 ListScales.append({"Scale":'Balinese',  "H_Steps": 'R, H, W, 2, 1.5, W', "L_Steps": ['1', 'b2', 'b3', '##4', '###5']})
 ListScales.append({"Scale":'Bebop Dominant',  "H_Steps": 'R, W, W, H, W, W, H, H, H', "L_Steps": ['1', '2', '3', '4', '5', '6', 'b7']})
 ListScales.append({"Scale":'Bebop Half Diminished',  "H_Steps": 'R, H, W, W, H, H, H, 1.5, H', "L_Steps": ['1', 'b2', 'b3', '4', 'b5', 'bb6', 'bbb7']})
 ListScales.append({"Scale":'Bebop Major',  "H_Steps": 'R, W, W, H, W, H, H, W, H', "L_Steps": ['1', '2', '3', '4', '5', 'b6', 'bb7']})
-ListScales.append({"Scale":'Bebop Minor',  "H_Steps": 'R, W, H, H, H, W, W, H, W', "L_Steps": ['1', '2', 'b3', 'b4', 'bb5', 'bb6', 'bb7']})
+ListScales.append({"Scale":'Bebop Minor',  "H_Steps": 'R, W, H, H, H, W, W, H, W', "L_Steps": ['1', '2', 'b3', '3', 'bb5', 'bb6', 'bb7']})
 ListScales.append({"Scale":'Blues',  "H_Steps": 'R, 1.5, W, H, H, 1.5, W', "L_Steps": ['1', '#2', '#3', '#4', '5', '#6']})
 ListScales.append({"Scale":'Blues Variation 1',  "H_Steps": 'R, 1.5, W, H, H, 1.5, H, H', "L_Steps": ['1', '#2', '#3', '#4', '5', '#6', '7']})
 ListScales.append({"Scale":'Blues Variation 2',  "H_Steps": 'R, 1.5, H, H, H, H, 1.5, H, H', "L_Steps": ['1', '#2', '3', '4', 'b5', 'bb6', 'b7']})
@@ -169,15 +202,15 @@ ListScales.append({"Scale":'Chinese 2',  "H_Steps": 'R, W, 1.5, W, W, 1.5', "L_S
 ListScales.append({"Scale":'Chinese Mongolian',  "H_Steps": 'R, W, W, 1.5, W, 1.5', "L_Steps": ['1', '2', '3', '##4', '##5']})
 ListScales.append({"Scale":'Diatonic',  "H_Steps": 'R, W, W, 1.5, W, 1.5', "L_Steps": ['1', '2', '3', '##4', '##5']})
 ListScales.append({"Scale":'Diminished',  "H_Steps": 'R, W, H, W, H, W, H, W, H', "L_Steps": ['1', '2', 'b3', '4', 'b5', 'b6', 'bb7']})
-ListScales.append({"Scale":'Diminished, Half',  "H_Steps": 'R, H, W, H, W, H, H, W, W', "L_Steps": ['1', 'b2', 'b3', 'b4', 'b5', 'bb6', 'bbb7']})
-ListScales.append({"Scale":'Diminished, Whole Tone',  "H_Steps": 'R, H, W, H, W, W, W, W', "L_Steps": ['1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7']})
+ListScales.append({"Scale":'Diminished, Half',  "H_Steps": 'R, H, W, H, W, H, H, W, W', "L_Steps": ['1', 'b2', 'b3', '3', 'b5', 'bb6', 'bbb7']})
+ListScales.append({"Scale":'Diminished, Whole Tone',  "H_Steps": 'R, H, W, H, W, W, W, W', "L_Steps": ['1', 'b2', 'b3', '3', 'b5', 'b6', 'b7']})
 ListScales.append({"Scale":'Dominant 7th',  "H_Steps": 'R, W, W, H, W, W, H, W', "L_Steps": ['1', '2', '3', '4', '5', '6', 'b7']})
 ListScales.append({"Scale":'Dominant Pentatonic',  "H_Steps": 'R, W, W, 1.5, 1.5, W', "L_Steps": ['1', '2', '3', '##4', '###5']})
 ListScales.append({"Scale":'Dorian',  "H_Steps": 'R, W, H, W, W, W, H, W', "L_Steps": ['1', '2', 'b3', '4', '5', '6', 'b7']})
 ListScales.append({"Scale":'Dorian #4',  "H_Steps": 'R, W, H, 1.5, H, W, H, W', "L_Steps": ['1', '2', 'b3', '#4', '5', '6', 'b7']})
 ListScales.append({"Scale":'Double Harmonic',  "H_Steps": 'R, H, 1.5, H, W, H, 1.5, H', "L_Steps": ['1', 'b2', '3', '4', '5', 'b6', '7']})
 ListScales.append({"Scale":'Egyptian',  "H_Steps": 'R, W, 1.5, W, W, 1.5', "L_Steps": ['1', '2', '#3', '##4', '##5']})
-ListScales.append({"Scale":'Eight Tone Spanish',  "H_Steps": 'R, H, W, H, H, H, W, W, W', "L_Steps": ['1', 'b2', 'b3', 'b4', 'bb5', 'bbb6', 'bbb7']})
+ListScales.append({"Scale":'Eight Tone Spanish',  "H_Steps": 'R, H, W, H, H, H, W, W, W', "L_Steps": ['1', 'b2', 'b3', '3', 'bb5', 'bbb6', 'bbb7']})
 ListScales.append({"Scale":'Enigmatic',  "H_Steps": 'R, H, 1.5, W, W, W, H, H', "L_Steps": ['1', 'b2', '3', '#4', '#5', '#6', '7']})
 ListScales.append({"Scale":'Ethiopian (A raray)',  "H_Steps": 'R, W, W, H, W, W, W, H', "L_Steps": ['1', '2', '3', '4', '5', '6', '7']})
 ListScales.append({"Scale":'Ethiopian (Geez & Ezel)',  "H_Steps": 'R, W, H, W, W, H, W, W', "L_Steps": ['1', '2', 'b3', '4', '5', 'b6', 'b7']})
@@ -198,8 +231,8 @@ ListScales.append({"Scale":'Japanese (B)',  "H_Steps": 'R, W, 1.5, W, H, 2', "L_
 ListScales.append({"Scale":'Japanese (Ichikosucho)',  "H_Steps": 'R, W, W, W, H, W, W, H', "L_Steps": ['1', '2', '3', '#4', '5', '6', '7']})
 ListScales.append({"Scale":'Japanese (in sen)',  "H_Steps": 'R, H, 2, W, 1.5, W', "L_Steps": ['1', 'b2', '#3', '##4', '###5']})
 ListScales.append({"Scale":'Japanese (Taishikicho)',  "H_Steps": 'R, W, W, H, H, H, W, H, HH', "L_Steps": ['1', '2', '3', '4', 'b5', 'bb6', 'bb7']})
-ListScales.append({"Scale":'Jewish (Adonai Malakh)',  "H_Steps": 'R, H, H, H, W, W, W, H, W', "L_Steps": ['1', 'b2', 'bb3', 'bb4', 'bb5', 'bb6', 'bb7']})
-ListScales.append({"Scale":'Jewish (Magen Abot)',  "H_Steps": 'R, H, W, H, W, W, W, H, H', "L_Steps": ['1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7']})
+ListScales.append({"Scale":'Jewish (Adonai Malakh)',  "H_Steps": 'R, H, H, H, W, W, W, H, W', "L_Steps": ['1', 'b2', 'bb3', 'b3', 'bb5', 'bb6', 'bb7']})
+ListScales.append({"Scale":'Jewish (Magen Abot)',  "H_Steps": 'R, H, W, H, W, W, W, H, H', "L_Steps": ['1', 'b2', 'b3', '3', 'b5', 'b6', 'b7']})
 ListScales.append({"Scale":'Kumoi',  "H_Steps": 'R, W, H, 2, W, 1.5', "L_Steps": ['1', '2', 'b3', '##4', '##5']})
 ListScales.append({"Scale":'Kumoi 2',  "H_Steps": 'R, H, 2, W, H, 2', "L_Steps": ['1', 'b2', '#3', '##4', '#5']})
 ListScales.append({"Scale":'Leading Whole Tone',  "H_Steps": 'R, W, W, W, W, W, H, H', "L_Steps": ['1', '2', '3', '#4', '#5', '#6', '7']})
@@ -210,7 +243,7 @@ ListScales.append({"Scale":'Lydian #2',  "H_Steps": 'R, 1.5, H, W, H, W, W, H', 
 ListScales.append({"Scale":'Lydian Diminished',  "H_Steps": 'R, W, H, 1.5, H, W, W, H', "L_Steps": ['1', '2', 'b3', '#4', '5', '6', '7']})
 ListScales.append({"Scale":'Lydian Minor',  "H_Steps": 'R, W, W, W, H, H, W, W', "L_Steps": ['1', '2', '3', '#4', '5', 'b6', 'b7']})
 ListScales.append({"Scale":'Major',  "H_Steps": 'R, W, W, H, W, W, W, H', "L_Steps": ['1', '2', '3', '4', '5', '6', '7']})
-ListScales.append({"Scale":'Major Blues',  "H_Steps": 'R, W, H, H, 1.5, W, 1.5', "L_Steps": ['1', '2', 'b3', 'b4', '5', '6']})
+ListScales.append({"Scale":'Major Blues',  "H_Steps": 'R, W, H, H, 1.5, W, 1.5', "L_Steps": ['1', '2', 'b3', '3', '5', '6']})
 ListScales.append({"Scale":'Major Locrian',  "H_Steps": 'R, W, W, H, H, W, W, W', "L_Steps": ['1', '2', '3', '4', 'b5', 'b6', 'b7']})
 ListScales.append({"Scale":'Major Pentatonic',  "H_Steps": 'R, W, W, 1.5, W, 1.5', "L_Steps": ['1', '2', '3', '##4', '##5']})
 ListScales.append({"Scale":'Melodic Minor',  "H_Steps": 'R, W, H, W, W, W, W, H', "L_Steps": ['1', '2', 'b3', '4', '5', '6', '7']})
@@ -218,12 +251,12 @@ ListScales.append({"Scale":'Minor Pentatonic',  "H_Steps": 'R, 1.5, W, W, 1.5, W
 ListScales.append({"Scale":'Mixo-Blues',  "H_Steps": 'R, 1.5, H, H, H, H, 1.5, W', "L_Steps": ['1', '#2', '3', '4', 'b5', 'bb6', 'b7']})
 ListScales.append({"Scale":'Mixolydian',  "H_Steps": 'R, W, W, H, W, W, H, W', "L_Steps": ['1', '2', '3', '4', '5', '6', 'b7']})
 ListScales.append({"Scale":'Mohammedan',  "H_Steps": 'R, W, H, W, W, H, 1.5, H', "L_Steps": ['1', '2', 'b3', '4', '5', 'b6', '7']})
-ListScales.append({"Scale":'Moorish Phrygian',  "H_Steps": 'R, H, W, H, H, W, H, W, HH', "L_Steps": ['1', 'b2', 'b3', 'b4', 'bb5', 'bb6', 'bbb7']})
+ListScales.append({"Scale":'Moorish Phrygian',  "H_Steps": 'R, H, W, H, H, W, H, W, HH', "L_Steps": ['1', 'b2', 'b3', '3', 'bb5', 'bb6', 'bbb7']})
 ListScales.append({"Scale":'Natural Minor',  "H_Steps": 'R, W, H, W, W, H, W, W', "L_Steps": ['1', '2', 'b3', '4', '5', 'b6', 'b7']})
 ListScales.append({"Scale":'Natural Pure Minor',  "H_Steps": 'R, W, H, W, W, H, W, W', "L_Steps": ['1', '2', 'b3', '4', '5', 'b6', 'b7']})
 ListScales.append({"Scale":'Neopolitan',  "H_Steps": 'R, H, W, W, W, H, 1.5, H', "L_Steps": ['1', 'b2', 'b3', '4', '5', 'b6', '7']})
 ListScales.append({"Scale":'Neopolitan Major',  "H_Steps": 'R, H, W, W, W, W, W, H', "L_Steps": ['1', 'b2', 'b3', '4', '5', '6', '7']})
-ListScales.append({"Scale":'Nine Tone',  "H_Steps": 'R, W, H, H, W, H, H, H, WH', "L_Steps": ['1', '2', 'b3', 'b4', 'b5', 'bb6', 'bbb7']})
+ListScales.append({"Scale":'Nine Tone',  "H_Steps": 'R, W, H, H, W, H, H, H, WH', "L_Steps": ['1', '2', 'b3', '3', 'b5', 'bb6', 'bbb7']})
 ListScales.append({"Scale":'Oriental (a)',  "H_Steps": 'R, H, 1.5, H, H, W, W, W', "L_Steps": ['1', 'b2', '3', '4', 'b5', 'b6', 'b7']})
 ListScales.append({"Scale":'Overtone',  "H_Steps": 'R, W, W, W, H, W, H, W', "L_Steps": ['1', '2', '3', '#4', '5', '6', 'b7']})
 ListScales.append({"Scale":'Overtone Dominant',  "H_Steps": 'R, W, W, W, H, W, H, W', "L_Steps": ['1', '2', '3', '#4', '5', '6', 'b7']})
@@ -239,15 +272,44 @@ ListScales.append({"Scale":'Prometheus Neopolitan',  "H_Steps": 'R, H, 1.5, W, 1
 ListScales.append({"Scale":'Roumanian Minor',  "H_Steps": 'R, W, H, 1.5, H, W, H, W', "L_Steps": ['1', '2', 'b3', '#4', '5', '6', 'b7']})
 ListScales.append({"Scale":'Six Tone Symmetrical',  "H_Steps": 'R, H, 1.5, H, 1.5, H, 1.5', "L_Steps": ['1', 'b2', '3', '4', '#5', '6']})
 ListScales.append({"Scale":'Spanish Gypsy',  "H_Steps": 'R, H, 1.5, H, W, H, W, W', "L_Steps": ['1', 'b2', '3', '4', '5', 'b6', 'b7']})
-ListScales.append({"Scale":'Super Locrian',  "H_Steps": 'R, H, W, H, W, W, W, W', "L_Steps": ['1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7']})
-ListScales.append({"Scale":'Ultralocrian',  "H_Steps": 'R, H, W, H, W, W, H, 1.5', "L_Steps": ['1', 'b2', 'b3', 'b4', 'b5', 'b6', 'bb7']})
-ListScales.append({"Scale":'All',  "H_Steps": 'R, H, H, H, H, H, H, H, H, H, H, HH', "L_Steps": ['1', 'b2', 'bb3', 'bb4', 'bbb5', '4xb', '5xb']})
+ListScales.append({"Scale":'Super Locrian',  "H_Steps": 'R, H, W, H, W, W, W, W', "L_Steps": ['1', 'b2', 'b3', '3', 'b5', 'b6', 'b7']})
+ListScales.append({"Scale":'Ultralocrian',  "H_Steps": 'R, H, W, H, W, W, H, 1.5', "L_Steps": ['1', 'b2', 'b3', '3', 'b5', 'b6', 'bb7']})
+ListScales.append({"Scale":'All',  "H_Steps": 'R, H, H, H, H, H, H, H, H, H, H, H', "L_Steps": ['1', 'b2', '2', 'b3', '3', '4', 'b5', '5', 'b6', '6', 'b7', '7']})
 ListScales.append({"Scale":'Whole Tone',  "H_Steps": 'R, W, W, W, W, W, W', "L_Steps": ['1', '2', '3', '#4', '#5', '#6']})
 
-def Show_Fretboard(tuning_dict, tuning, notes_sharp, notes_flat, valid_notes):
-    #print a character map of the fretboard with only the chords chosen above
+ShortList_Scale = {
+  'Major', 'Major Blues', 'Blues', 'Major Pentatonic', 'Pentatonic Blues', 'Melodic Minor', 'Natural Minor', 'Diminished', 'Mixolydian', 'Phrygian', 'Locrian', 'Spanish Gypsy'
+}
+
+def Show_Fretboard(tuning_dict, tuning, notes_sharp, notes_flat, valid_notes, bool_scale, bool_interval):
+    #This function prints a character map of the fretboard
+    
+    #tuning_dict contains the dictionary for all the tunings
+    #tuning contains the tuning for the instrument
+    #valid_notes contains a list of notes that it will show
+    #bool_interval is True or False and shows either notes or intervals
+    
     #print "Tuning:", tuning_dict[tuning]
-    print "Valid notes:", valid_notes
+    #print "Valid notes:", valid_notes
+    
+    #if any of the open strings are sharp or flat
+    bool_sharp_open = Bool_sharp_scale(tuning_dict[tuning])
+    fret_sym = unichr(124)
+    
+    #bool_scale = False
+    if bool_scale == True: #If you want a fretboard with scales
+        #Find the Index of the chosen scale
+        scale_interval = ""
+        scale_steps = ""
+        for Scale in ListScales:  # s = scale, h = H_Steps, i = interval (L_Steps)
+            #print Scale["Scale"], Scale["H_Steps"], Scale["L_Steps"]
+            if Scale["Scale"] == string_scale:  #if the scale matches a scale in ListScales
+                scale_steps = Scale["H_Steps"]
+                scale_interval = Scale["L_Steps"]
+                break
+    else: #If you want a fretboard with chords
+        scale_interval = chord_dict[chord_name][1:]
+    
     for open_string in reversed(range(len(tuning_dict[tuning]))):
         string_notes = ""
         O_string_note = tuning_dict[tuning][open_string]  #Open string of the instrument
@@ -265,23 +327,72 @@ def Show_Fretboard(tuning_dict, tuning, notes_sharp, notes_flat, valid_notes):
             step_from_note = (notes.index(O_string_note) + fret) % 12
             fret_note = notes[step_from_note]
             
+            if fret_note in valid_notes:
+                inte = valid_notes.index(fret_note)  #index of the fret_note relative to the root note
+                if inte >= len(valid_notes):
+                    print "STOP", fret_note, "inte", inte, "len", len(valid_notes), valid_notes
+                else:
+                    #print fret_note, inte, scale_interval[inte]
+                    if bool_interval == True:
+                        fret_note = scale_interval[inte]  #testing to replace the fret note name with the interval name instead
+            
             if fret > 0:     #after the first fret
-                if len(fret_note)==1:   #if the note has only one character
-                    seg = "---"         #guitar segment for string
-                else:                   #if the note has a sharp or a flat (two characters)
-                    seg = "--"          #guitar segment for string
-                    
+                #if len(fret_note)==1:   #if the note has only one character
+                #    seg = "---"         #guitar segment for string
+                #else:                   #if the note has a sharp or a flat (two characters)
+                #    seg = "--"          #guitar segment for string
+
+                seg = "-"*(4-len(fret_note))  #repeat the "-" chacter (4 times - the length of the fret note)
+                
                 if notes_sharp[step_from_note] in valid_notes or notes_flat[step_from_note] in valid_notes:
                     string_notes = string_notes + seg + fret_note + fret_sym
                 else:
                     string_notes = string_notes + "----" + fret_sym 
             else:           #before the first fret
                 if fret==0:
-                    string_notes = string_notes + fret_note + fret_sym
+                    if bool_sharp_open: #if there any sharps in any of the the open tuning
+                        if len(O_string_note)==2:
+                            string_notes = string_notes + fret_note + fret_sym
+                        else:
+                            string_notes = " " + string_notes + fret_note + fret_sym
+                    else:
+                      seg = " "*(4-len(fret_note))
+                      string_notes = seg + string_notes + fret_note + fret_sym
+                      
         print string_notes
-    print ""
+    
+    #print dots and/or fret numbers below the fretboard
+    dots = ""
+    frets = ""
+    logical_frets = False   #Either prints False = fret numbers or True = dots
+    
+    frets = " "*3
+    dots = " "*3
+    
+    for fret in range(13):
+        step_from_note = (fret) % 13
+        dot = notes_dots[step_from_note]
 
-def return_notes(root_note, notes, steps, intervals):  #root_note is a string, intervals is a list eg ['1',...'7']
+        if fret <> 0:
+          dots = dots + dot
+          if fret < 10:
+             frets = frets + "  " + str(fret) + "  "
+          else:
+             frets = frets + " " + str(fret) + "  "
+        else:
+          dots = dots
+          frets = frets + str(fret) + "  "
+    if logical_frets == False:
+        print dots
+    else:
+        print frets
+
+def Return_Interval(half_steps):  
+    #half_steps is an integer that references the half steps in an interval
+    #eg The half step 0 is interval '1'. The half step 7 is interval '5'
+    return steps[half_steps]
+
+def Return_Scale_Notes(root_note, notes, intervals):  #root_note is a string, intervals is a list eg ['1','b3','7']
     #Print out the interval, note, half-step, and note for the chosen chord
     #print "Root note:", root_note
     #print "Intervals:", intervals
@@ -309,10 +420,57 @@ def return_notes(root_note, notes, steps, intervals):  #root_note is a string, i
         notes_from_root.append(notes[step_from_note])
     return notes_from_root
 
+def Return_Chord_Notes(root_note, chord_name):
+    #Given the root_note and chord_name, this function returns a list with the notes in the chord eg. ['Ab', 'C', 'Eb'] for a Ab Major Chord
+    
+    #print "Root Note:", root_note
+    #print "Chord Name: ", chord_name
+    #print "Intervals:", chord_dict[chord_name]
+    #print "Interval, steps, note"
+    
+    chord_notes=list()
+    for chord in range(1,len(chord_dict[chord_name])):
+        interval = chord_dict[chord_name][chord]
+        interval_temp = interval
+        step = 0
+        step_from_note = 0
+        #print "chord", chord, "interval", interval, "steps", steps.index(interval)+step
+        b=interval.count('b') #Count the number of flats in the interval (eg b3)
+        h=interval.count('#') #Count the number of sharps in the interval (eg #5)
+        if b>1 or h>=1:
+            if b>1: #flattened more than twice
+                step=-b
+                interval_temp=interval.replace("b", "")
+            if h>=1: #sharpened more than once
+                step=h
+                interval_temp=interval.replace("#", "")
+        
+        #find the number of the interval, then add/substract the number of sharps/flats
+        step_from_note = (notes.index(root_note) + steps.index(interval_temp)+step) % 12
+        
+        #add valid notes to chord_notes
+        chord_notes.append(notes[step_from_note])
+        #print interval, steps.index(interval_temp)+step, notes[step_from_note]
+    #print "Notes in Chord:", chord_notes
+    return chord_notes
+
+#Returns true if the scale contains sharps or flats
+def Bool_sharp_scale(scales):
+    bool_sharp_scale = False    
+    for scale in scales:
+        if len(scale)==2:
+            bool_sharp_scale = True
+            break
+    return bool_sharp_scale
+
+#False = Don't show intervals on fretboard,  True = Show notes on fretboard
+bool_interval = False
+
+print " "
 print "Would you like a guitar or a bass?"
 while True:
     #instrument = raw_input().title()
-    instrument = 'Guitar'
+    #instrument = 'Guitar'
     if len(instrument)==0: #If nothing was entered, set the default to guitar"
         instrument = 'Guitar'
         break
@@ -323,72 +481,95 @@ while True:
     else:
         print "Only guitar and bass are allowed. Your " + instrument + " is not."
 print "Selection: " + instrument
-print ""
+print " "
 
 #print distinct list of strings the instrument can have
 print "Your string options for " + instrument + " are:"
 instrument_list=[]
-for tuning, notes in tuning_dict.iteritems():
+
+for tuning_i, notes in tuning_dict.iteritems():
     #print "RE", re.findall('\d+', tuning)[0], tuning
-    string_no = re.findall('\d+', tuning)[0] #create a list of all the numbers in a string
-    if instrument.lower() in tuning.lower():
-        if (string_no + " String "+ instrument) not in instrument_list:
-            instrument_list.append(string_no + " String "+ instrument)
+    strings_inst = re.findall('\d+', tuning_i)[0] #creates a list of all the strings that an instrument can have
+    if instrument.lower() in tuning_i.lower():
+        if (strings_inst + " String "+ instrument) not in instrument_list:
+            instrument_list.append(strings_inst + " String "+ instrument)
 print instrument_list
-print ""
+print " "
 
 #find the number of strings the instrument has
 print "How many strings does your " + instrument.lower() + " have?"
-while True:
+valid_strings = False
+while not(valid_strings):
     #string_no = raw_input()
-    string_no = '7'
+    #string_no = '6'
+    #print "STRING NO", string_no
     if len(string_no)==0: 
         if instrument == 'Bass': #If a bass is selected set default to 4 strings"
             string_no = '4'
+            valid_strings = True
         if instrument == 'Guitar': #If a guitar is selected set default to 6 strings"
             string_no = '6'
-    if int(string_no)>0 and int(string_no)<=7:
-        break
+            valid_strings = True
+    if int(string_no)>0 and int(string_no)<8:
+        if instrument == 'Bass' and (int(string_no)>3 and int(string_no)<7): #If a bass is selected set default to 4 strings"
+            valid_strings = True
+        if instrument == 'Guitar' and (int(string_no)>5 and int(string_no)<8): 
+            valid_strings = True
     else:
-        print "Not a valid number"
-print string_no
-print ""
+        print "Not a valid number for " + instrument.lower()
+print "Selection:", string_no
+print " "
 
 #Show possible tuning for the instrument and string number
 print "What tuning does your " + string_no + " string " + instrument.lower() + " have?"
-for tuning, notes in tuning_dict.iteritems() :
-    if str(instrument.lower() + " " + string_no) in tuning.lower() in tuning.lower():
-        possible_tuning =  tuning.replace(instrument, "").replace(string_no,"")
-        print possible_tuning
-print ""
+if len(tuning)==0:
+  for tuning_i, notes in tuning_dict.iteritems() :
+      if str(instrument.lower() + " " + string_no) in tuning_i.lower():
+          #possible_tuning =  tuning_i.replace(instrument, "").replace(string_no, "")
+          possible_tuning =  tuning_i.replace(instrument + " " + string_no, "")
+          print possible_tuning
+  print "Please select your tuning from the above list for your " + string_no + " string "
 
-print "Please select your tuning from the above list for your " + string_no + " string "
-while True:
+
+# Exit out of this loop if someone enters a bad selection 5 times
+count = 0
+while count <= 5:
     #tuning = raw_input().title()
-    tuning = 'Standard'
+    #tuning = 'Standard'
     #If no tuning is selected set defaults
+    #print "TUNING", tuning, "STRING NO", string_no, "INSTRUMENT", instrument
     if len(tuning)==0: 
         if instrument == 'Guitar':
             tuning = 'Standard'
+            print "AAA 1"
         if instrument == 'Bass':
             if string_no == '4':
+                print "AAA 2"
                 tuning = 'Standard'
             if string_no == '5':
+                print "AAA 3"
                 tuning = 'Standard B'
             if string_no == '6':
+                print "AAA 4"
                 tuning = 'Standard'
         your_tuning = str(instrument + " " + string_no + " " + tuning).title()
+        count = count + 1 
         break
     else:
         your_tuning = str(instrument + " " + string_no + " " + tuning).title()
         #print "dict", tuning_dict[your_tuning]
+        #print "Strip:", your_tuning.title().strip()
         if your_tuning.title() in tuning_dict.keys():
             your_tuning = str(instrument + " " + string_no + " " + tuning).title()
+            #print "FOUND", your_tuning, "in tuning_dict"
             break
         else:
             print "Not valid tuning"
+            count = count + 1
+            break
+print "Selection:", tuning
+print " "
 print "Tuning Instrument:", your_tuning.title()
-print ""
 
 #randomly chose either flats or sharp to display on fretboard
 if randint(0, 1)==0: #random number 0 or 1
@@ -397,50 +578,31 @@ else:
     notes = notes_sharp
 
 tuning = your_tuning
-#print a character map of the fretboard for the instrument with the selected tuning
-print "Your tuning:", your_tuning
-print "Tuning:", tuning_dict[tuning]
-print ""
 
-fret_sym = unichr(124)
-for open_string in reversed(range(len(tuning_dict[tuning]))):
-    string_notes = ""
-    O_string_note = tuning_dict[tuning][open_string]
-    for fret in range(13):
-        #print open_string, fret, O_string_note
-    
-        if O_string_note in notes_flat: #If the note contains a flat
-            notes = notes_flat
-        if O_string_note in notes_sharp: #If the note contains a sharp
-            notes = notes_sharp
-            
-        step_from_note = (notes.index(O_string_note) + fret) % 12
-        if fret > 0:     #after the first fret
-            if len(notes[step_from_note])==1:
-                seg = "---" #guitar segment for string
-            else:
-                seg = "--" #guitar segment for string
-            string_notes = string_notes + seg + notes[step_from_note] + fret_sym
-        else:  #before the first fret
-            if len(notes[step_from_note])==1:
-                seg = ":---" #guitar segment for string
-            else:
-                seg = ":--" #guitar segment for string
-            string_notes = string_notes + notes[step_from_note] + fret_sym
-    print string_notes
-print ""
+#print a character map of the fretboard for the instrument with the selected tuning
+print "Tuning:", tuning_dict[tuning]
+print " "
+
+#time.sleep(5)
+string_scale = 'All'
+Show_Fretboard(tuning_dict, tuning, notes_sharp, notes_flat, notes, bool_scale = True, bool_interval = False)
+
+string_scale = str(settings[5])  # use settings to set back to default
 
 #print "Intervals and their half-steps"
 #for chord in steps:
 #    print chord, steps.index(chord)
-#print ""
+#print "---------------------------------------------------------"
 
+print " "
 flat = False
 sharp = True
-while True: #Continue while loop till a vaild note is chosen
+
+#Continue while loop till a vaild note is chosen
+while True: 
     print "Enter root note: (eg " + random.choice(notes_flat) + ")"
-    #root_note = raw_input().title()
-    root_note = 'C'
+    #root_note = raw_input().title()   #eg C
+    print "Selection:", root_note
     if len(root_note)==0: #If nothing was entered, set the default to "A"
         root_note = "A"
         flat = True
@@ -455,8 +617,9 @@ while True: #Continue while loop till a vaild note is chosen
         break
     else:
         print root_note, " is an invalid note"
-print 
-print ""
+
+print " "
+print "---------------------------------------------------------"
 
 #Show list of possible chords to chose from
 chord_str = ''
@@ -464,16 +627,16 @@ print "Chose your chord from the following list:"
 for chord, chord_short in sorted(chord_dict.items()):
     chord_str = chord_str + chord_short[0] + ', '
 print chord_str[:-2]  #remove the last comma
-print ""
+print "---------------------------------------------------------"
 
 #Enter your chosen chord
 valid_chord = False
-chord_name = ""
+#chord_name = ""
 while not(valid_chord): #Continue the while loop till a valid chord is chosen
     print "Enter chord type: (eg " + random.choice(chord_dict.keys()) + ")"
     #chord_name = raw_input().strip().lower()
-    chord_name = '7#9#5'
-    print len(chord_name), chord_name
+    #chord_name = '7#9#5'
+    #print len(chord_name), chord_name
     if len(chord_name)==0: #If nothing was entered, set the default to "major"
         chord_name = "major"
         valid_chord = True
@@ -494,7 +657,8 @@ while not(valid_chord): #Continue the while loop till a valid chord is chosen
             valid_chord = False
             print chord_name, " is an invalid chord"
 print "Chord:", chord_name
-print ""
+print "---------------------------------------------------------"
+
 
 #Print out the interval, note, half-step, and note for the chosen chord
 print "Root note:", root_note
@@ -522,57 +686,110 @@ for chord in range(1,len(chord_dict[chord_name])):
     #add valid notes to chord_notes
     chord_notes.append(notes[step_from_note])
     print interval, steps.index(interval_temp)+step, notes[step_from_note]
-print ""
+print "---------------------------------------------------------"
 
 #print "Chord notes: ", chord_notes
-#print ""
+#print "---------------------------------------------------------"
 
-Show_Fretboard(tuning_dict, tuning, notes_sharp, notes_flat, chord_notes)
+print "Valid notes:", chord_notes
+print " "
+
+Show_Fretboard(tuning_dict, tuning, notes_sharp, notes_flat, chord_notes, bool_scale = False, bool_interval = False)
+print " "
+Show_Fretboard(tuning_dict, tuning, notes_sharp, notes_flat, chord_notes, bool_scale = False, bool_interval = True)
+print " "
+    
+#Print out the fretboard for all root notes
+print " "
+print " "
+print chord_name.title(), "Chord for 12 keys"
+print "---------------------------------------------------------"
+print " "
+for root_note in notes_flat:
+    chord_notes = Return_Chord_Notes(root_note, chord_name)
+    print "Root Note:", root_note
+    print "Chord Name:", chord_name.title()
+    print "Intervals:", chord_dict[chord_name]   #chord_dict[chord_name][chord]
+    print "Chord Notes:", chord_notes
+
+    print " "
+    Show_Fretboard(tuning_dict, tuning, notes_sharp, notes_flat, chord_notes, bool_scale = False, bool_interval = False)
+    print " "
+    Show_Fretboard(tuning_dict, tuning, notes_sharp, notes_flat, chord_notes, bool_scale = False, bool_interval = True)
+    print " "
+
+print "---------------------------------------------------------"
+
+# exit()
 
 #Show list of possible scales
 print "What scale from the following list do you want to use?"
-print ""
-string_scale=""
-for Scale in ListScales:
-        string_scale = string_scale + Scale["Scale"] + ", "
-print string_scale[:-2]
-print ""
 
-#Keep asking for a scale till a valid one is chosen
-valid_scale = False
-pos_scale = [] #possible scale list of names that fit the string_scale
-while not(valid_scale):
-    #string_scale = raw_input().title()
-    string_scale = "Byzantine"
-    if len(string_scale)==0 or string_scale=="": #If nothing was entered, set the default to Major"
-        string_scale = 'Major'
-        break
-    else:
-        for Scale in ListScales: #check through list of scales
-            if string_scale in Scale["Scale"]: #pattern match string with list
-                pos_scale.append(Scale["Scale"]) #save to new possible list if the string is in any scale
-                if string_scale == Scale["Scale"]:
-                    #print "Valid scale", string_scale, "in ", Scale["Scale"]
-                    valid_scale = True
-                    break
-        if valid_scale:
-            #print "check len", string_scale
+if len(string_scale) > 0:  #If the scale has already been selected
+  print "Selection:", string_scale
+else:  #If the scale has not yet been selected
+    for Scale_i in ListScales:
+        if Scale_i["Scale"] in ShortList_Scale:  #Using a short list of scales
+            string_scale = string_scale + Scale_i["Scale"] + ", "
+    
+    print string_scale[:-2]
+    
+    #Keep asking for a scale till a valid one is chosen
+    valid_scale = False
+    pos_scale = [] #possible scale list of names that fit the string_scale
+    while not(valid_scale):
+        string_scale = raw_input().title()  #Wait for input from the user
+        #string_scale = "Byzantine"
+        if len(string_scale)==0 or string_scale=="": #If nothing was entered, set the default to Major"
+            string_scale = 'Major'
             break
         else:
-            print string_scale + " is an invalid scale"
-            for possible in pos_scale:
-                print "Try: " + possible
-            del pos_scale[:] #delete the possible list after completion
-            print ""
-            
-print "Scale: "   + Scale["Scale"]
-print "Formula: " + Scale["H_Steps"]
-print "Intervals: ", Scale["L_Steps"]
-print ""
+            for Scale_i in ListScales: #check through list of scales
+                if string_scale in Scale_i["Scale"]: #pattern match string with list
+                    pos_scale.append(Scale_i["Scale"]) #save to new possible list if the string is in any scale
+                    if string_scale == Scale_i["Scale"] or string_scale.lower() == Scale_i["Scale"]:
+                        #print "Valid scale", string_scale, "in ", Scale["Scale"]
+                        valid_scale = True
+                        break
+            if valid_scale:
+                #print "check len", string_scale
+                break
+            else:
+                print string_scale + " is an invalid scale"
+                for possible in pos_scale:
+                    print "Try: " + possible
+                del pos_scale[:] #delete the possible list after completion
+                print " "
 
-valid_scale = return_notes("C", notes, steps, Scale["L_Steps"])
-print "Scale: " + root_note + " " + Scale["Scale"]
-print "Notes from Root:", valid_scale
-print ""
+print " "
+print " "
+print string_scale.title(), "Scale in 12 keys"
+print "---------------------------------------------------------"
+print " "
 
-Show_Fretboard(tuning_dict, tuning, notes_sharp, notes_flat, valid_scale)
+#Find the Index of the chosen scale
+scale_interval = ""
+scale_steps = ""
+for Scale in ListScales:  # s = scale, h = H_Steps, i = interval (L_Steps)
+    #print Scale["Scale"], Scale["H_Steps"], Scale["L_Steps"]
+    if Scale["Scale"] == string_scale:  #if the scale matches a scale in ListScales
+        scale_steps = Scale["H_Steps"]
+        scale_interval = Scale["L_Steps"]
+        break
+
+#Print the scales for each of the 12 keys
+for root_note in notes_flat:
+    scale_notes = Return_Scale_Notes(root_note, notes, scale_interval)
+    
+    print "Scale Name:", root_note, string_scale   #eg E Major
+    print "Steps:",  scale_steps
+    print "Intervals:", scale_interval
+    print "Scale Notes:", scale_notes
+    print " "
+    
+    Show_Fretboard(tuning_dict, tuning, notes_sharp, notes_flat, scale_notes, bool_scale = True, bool_interval = False)
+    print " "
+    Show_Fretboard(tuning_dict, tuning, notes_sharp, notes_flat, scale_notes, bool_scale = True, bool_interval = True)
+    print " "
+
+print "---------------------------------------------------------"
